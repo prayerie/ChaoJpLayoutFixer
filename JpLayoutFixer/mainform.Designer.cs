@@ -101,7 +101,7 @@
             // 
             // wizard
             // 
-            this.wizard.Image = ChaoJpLayoutFixer.Properties.Resources.res11;
+            this.wizard.Image = global::ChaoJpLayoutFixer.Properties.Resources.res11;
             this.wizard.Location = new System.Drawing.Point(-1, 1);
             this.wizard.Name = "wizard";
             this.wizard.Size = new System.Drawing.Size(121, 161);
@@ -123,6 +123,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.Name = "mainform";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "ChaoJpLayoutFixer";
             this.Load += new System.EventHandler(this.mainform_Load);
             ((System.ComponentModel.ISupportInitialize)(this.wizard)).EndInit();
