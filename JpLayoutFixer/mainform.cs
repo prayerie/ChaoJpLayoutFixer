@@ -201,7 +201,7 @@ namespace JpLayoutFixer {
                     using (var regKey = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\Keyboard Layouts\00000411", true)) {
                         var oldLayoutFile = regKey.GetValue("Layout File") as string;
                         var regFilePath = Path.Combine(Application.StartupPath, "Japanese Layout Backup.reg");
-                        Process.Start("reg", $"export HKLM\\SYSTEM\\CurrentControlSet\\Control\\Keyboard Layouts\\00000411\"{regFilePath}\" /y");
+                        Process.Start("reg", $"export \"HKLM\\SYSTEM\\CurrentControlSet\\Control\\Keyboard Layouts\\00000411\" \"{regFilePath}\" /y");
                         regKey.SetValue("Layout File", layoutFile);
                         UpdateLabel(layoutFile);
                         string msg = "Your Japanese input method will now use {0} ({1}).\nYou must log back in for this to take effect.\n\nThe file \"Japanese Layout Backup.reg\" has been created in the current directory if you wish to revert your changes.";
