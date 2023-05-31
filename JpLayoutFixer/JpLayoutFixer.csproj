@@ -286,6 +286,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="appicon%281%29.ico" />
+    <Content Include="readme_images\app_screenshot.png" />
+    <Content Include="readme_images\banner.png" />
     <None Include="Resources\author2.png" />
     <None Include="Resources\smoshImg.bmp" />
   </ItemGroup>
