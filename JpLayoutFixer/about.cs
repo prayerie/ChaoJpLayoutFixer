@@ -19,7 +19,7 @@ namespace JpLayoutFixer {
         }
 
         private void about_Load(object sender, EventArgs e) {
-            aboutBox.Text = "ChaoJpLayoutFixer " + Application.ProductVersion + " by Misthands";
+            aboutBox.Text = "ChaoJpLayoutFixer " + Application.ProductVersion + " by Mistyhands";
         }
         
 
@@ -30,9 +30,9 @@ namespace JpLayoutFixer {
             }
             catch (Exception ex) {
                 if (Global.Jp)
-                    MessageBox.Show("URLを開くのに失敗しました: " + ex.Message);
+                    MessageBox.Show(this, "URLを開くのに失敗しました: " + ex.Message);
                 else
-                    MessageBox.Show("Failed to open hyperlink: " + ex.Message);
+                    MessageBox.Show(this, "Failed to open hyperlink: " + ex.Message);
             }
         }
 

@@ -10,8 +10,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
-
-//removed imports for brevity
 namespace JpLayoutFixer {
     public partial class mainform : Form {
 
@@ -42,23 +40,19 @@ namespace JpLayoutFixer {
             client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
 
             try {
-                // Fetch the releases from GitHub
                 var response = await client.GetStringAsync("https://api.github.com/repos/mistyhands/chaojplayoutfixer/releases");
                 var releases = JArray.Parse(response);
 
-                // Get the latest release
                 var latestRelease = releases[0];
                 var latestVersion = new Version(latestRelease["tag_name"].ToString().TrimStart('v'));
 
-                // Compare the version of the latest release with the current application's version
                 var currentVersion = new Version(Application.ProductVersion);
 
-                // If the latest version is greater than the current version, show a dialog
                 if (latestVersion > currentVersion) {
-                    string message = "New version available. Go to the release page?";
+                    string message = "A new version of ChaoJpLayoutFixer is available. Go to the release page?";
                     if (Global.Jp)
                         message = "ChaoJpLayoutFixerの新しいバージョンが利用可能です。リリースページをご覧になりたいですか？";
-                    var dialogResult = MessageBox.Show(message, "Update available", MessageBoxButtons.YesNo);
+                    var dialogResult = MessageBox.Show(this, message, "Update available", MessageBoxButtons.YesNo);
                     if (dialogResult == DialogResult.Yes) {
                         // Open the release page
                         Process.Start(new ProcessStartInfo {
@@ -69,7 +63,6 @@ namespace JpLayoutFixer {
                 }
             }
             catch (Exception) {
-                // Ignore any exceptions
             }
         }
 
@@ -94,7 +87,6 @@ namespace JpLayoutFixer {
             var identity = WindowsIdentity.GetCurrent();
             var principal = new WindowsPrincipal(identity);
             if (!principal.IsInRole(WindowsBuiltInRole.Administrator)) {
-                // Re-run the program with admin rights
                 var startInfo = new ProcessStartInfo(Application.ExecutablePath) {
                     UseShellExecute = true,
                     Verb = "runas"
@@ -130,18 +122,15 @@ namespace JpLayoutFixer {
                             UpdateLabel(layoutFile);
                         }
                         else {
-                            // Handle the case where the registry key exists but the value does not
                             currentDllLbl.Text = "Registry key value not found";
                         }
                     }
                     else {
-                        // Handle the case where the registry key does not exist
                         currentDllLbl.Text = "Registry key not found";
                     }
                 }
             }
             catch (Exception ex) {
-                // Handle any other exceptions that might occur
                 currentDllLbl.Text = "Error: " + ex.Message;
             }
 
@@ -184,7 +173,6 @@ namespace JpLayoutFixer {
                             var layoutText = subKey.GetValue("Layout Text") as string;
                             var layoutFile = subKey.GetValue("Layout File") as string;
 
-                            // If either "Layout Text" or "Layout File" is missing, skip this item
                             if (!string.IsNullOrEmpty(layoutText) && !string.IsNullOrEmpty(layoutFile) && layoutText != "Japanese" && layoutText != "日本語"
                                 && layoutFile != "KBDUS.DLL") {
                                 listBoxAvailableLocales.Items.Add(new KeyValuePair<string, string>(layoutText, layoutFile));
@@ -193,15 +181,13 @@ namespace JpLayoutFixer {
                         }
                     }
                 }
-                // Specify the display and value members for the listBox.
                 listBoxAvailableLocales.DisplayMember = "Key";
                 listBoxAvailableLocales.ValueMember = "Value";
 
                 
             }
             catch (Exception ex) {
-                // Handle any other exceptions that might occur
-                MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, "Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -216,17 +202,18 @@ namespace JpLayoutFixer {
                         var oldLayoutFile = regKey.GetValue("Layout File") as string;
                         var regFilePath = Path.Combine(Application.StartupPath, "Japanese Layout Backup.reg");
                         Process.Start("reg", $"export HKLM\\SYSTEM\\CurrentControlSet\\Control\\Keyboard Layouts\\00000411\"{regFilePath}\" /y");
-                        // Update the label
                         regKey.SetValue("Layout File", layoutFile);
                         UpdateLabel(layoutFile);
-                        // Show success message
                         string msg = "Your Japanese input method will now use {0} ({1}).\nYou must log back in for this to take effect.\n\nThe file \"Japanese Layout Backup.reg\" has been created in the current directory if you wish to revert your changes.";
                         string title = "Success";
                         if (Global.Jp) {
                             title = "変更に成功しました";
                             msg = "Microsoft 日本語 IMEのキー配列が {0}（{1}）に設定されていました。\nキー配列の変更は、再ログインするまで反映されません。\n\nキーボード配列の変更を元に戻したい場合は、カレントディレクトリに「Japanese Layout Backup.reg」ファイルが作成されています。";
                         }
-                        MessageBox.Show(String.Format(msg, layoutsDict[layoutFile], layoutFile), "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        DialogResult dia = MessageBox.Show(this, String.Format(msg, layoutsDict[layoutFile], layoutFile), "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        
+                        if (dia == DialogResult.OK)
+                            Application.Exit();
                     }
                 }
                 else {
@@ -237,7 +224,7 @@ namespace JpLayoutFixer {
                         title = "無選択";
                         msg = "無効なキーボード配列、または選択されていないキー配列です。";
                     }
-                    MessageBox.Show(msg, title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show(this, msg, title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             
@@ -247,7 +234,7 @@ namespace JpLayoutFixer {
             about aboutForm = new about();
             aboutForm.TopMost = true;
 
-            aboutForm.ShowDialog();
+            aboutForm.ShowDialog(this);
         }
 
         /* Switch language to Japanese.
