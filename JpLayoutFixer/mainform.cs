@@ -112,7 +112,7 @@ namespace JpLayoutFixer {
 
         private void LoadCurrentJpLayout() {
             try {
-                using (var regKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\Keyboard Layouts\00000411", false)) {
+                using (var regKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\Keyboard Layouts\00000411 ", false)) {
                     if (regKey != null) {
                         var layoutText = regKey.GetValue("Layout Text") as string;
                         var layoutFile = regKey.GetValue("Layout File") as string;
@@ -193,9 +193,9 @@ namespace JpLayoutFixer {
 
         private void button1_Click(object sender, EventArgs e) {
             CheckAndElevatePrivileges();
-
-             {
+            try {
                 var selectedPair = (KeyValuePair<string, string>)listBoxAvailableLocales.SelectedItem;
+
                 var layoutFile = selectedPair.Value;
                 if (!string.IsNullOrEmpty(layoutFile)) {
                     using (var regKey = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\Keyboard Layouts\00000411", true)) {
@@ -211,7 +211,7 @@ namespace JpLayoutFixer {
                             msg = "Microsoft 日本語 IMEのキー配列が {0}（{1}）に設定されていました。\nキー配列の変更は、再ログインするまで反映されません。\n\nキーボード配列の変更を元に戻したい場合は、カレントディレクトリに「Japanese Layout Backup.reg」ファイルが作成されています。";
                         }
                         DialogResult dia = MessageBox.Show(this, String.Format(msg, layoutsDict[layoutFile], layoutFile), "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        
+
                         if (dia == DialogResult.OK)
                             Application.Exit();
                     }
@@ -227,7 +227,17 @@ namespace JpLayoutFixer {
                     MessageBox.Show(this, msg, title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
-            
+            catch (System.NullReferenceException) {
+                string msg = "That layout name doesn't exist.";
+                string title = "Error";
+                if (Global.Jp) {
+                    msg = "入力されたキー配列名が無効である。";
+                    title = "エラーが発生しました";
+                }
+                MessageBox.Show(this, msg, title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                SelectCurrentLayout();
+
+            }
         }
 
         private void btnAbout_Click(object sender, EventArgs e) {
