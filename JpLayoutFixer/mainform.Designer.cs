@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(mainform));
             this.btnGo = new System.Windows.Forms.Button();
             this.currentDllLbl = new System.Windows.Forms.Label();
@@ -36,6 +37,7 @@
             this.infoDetails = new System.Windows.Forms.Label();
             this.btnAbout = new System.Windows.Forms.Button();
             this.wizard = new System.Windows.Forms.PictureBox();
+            this.chJpLfTrayIcon = new System.Windows.Forms.NotifyIcon(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.wizard)).BeginInit();
             this.SuspendLayout();
             // 
@@ -108,6 +110,11 @@
             this.wizard.TabIndex = 6;
             this.wizard.TabStop = false;
             // 
+            // chJpLfTrayIcon
+            // 
+            this.chJpLfTrayIcon.Text = "notifyIcon1";
+            this.chJpLfTrayIcon.Visible = true;
+            // 
             // mainform
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -141,6 +148,7 @@
         private System.Windows.Forms.PictureBox wizard;
         private System.Windows.Forms.Label infoDetails;
         private System.Windows.Forms.Button btnAbout;
+        private System.Windows.Forms.NotifyIcon chJpLfTrayIcon;
     }
 }
 

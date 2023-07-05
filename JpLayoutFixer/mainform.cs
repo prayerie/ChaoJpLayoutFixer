@@ -16,6 +16,7 @@ namespace JpLayoutFixer {
         private Dictionary<string, string> layoutsDict = new Dictionary<string, string>();
         private string currentLblMsg = string.Empty;
         private string currentLblMsgJp = string.Empty;
+        private Boolean reallyClosing = false;
 
         public mainform() {
             InitializeComponent();
@@ -32,6 +33,27 @@ namespace JpLayoutFixer {
             LoadCurrentJpLayout();
             SelectCurrentLayout();
             LocaliseComponents();
+
+            this.FormClosing += (s, e) =>
+            {
+                if (!reallyClosing) {
+                    e.Cancel = true;
+                    this.Hide();
+                }
+            };
+
+            chJpLfTrayIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(Application.ExecutablePath);
+
+            var closeMenuItem = new MenuItem("Quit", (s, e) =>
+            {
+                reallyClosing = true;
+                Application.Exit();
+            });
+
+            chJpLfTrayIcon.ContextMenu = new ContextMenu(new MenuItem[] { closeMenuItem });
+
+            chJpLfTrayIcon.Visible = true;
+
         }
 
         private async Task CheckForUpdates() {
